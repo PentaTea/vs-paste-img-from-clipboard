@@ -4,13 +4,9 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import VSPicgo from './vs-picgo';
 
-function uploadImageFromClipboard(vspicgo: VSPicgo): Promise<string | void | Error> {
-  return vspicgo.upload();
-}
-
 function pasteImageFromClipboard(vspicgo: VSPicgo): void {
   const editor = getActiveMarkDownEditor();
-  editor ? vspicgo.paste() : (() => {})();
+  editor ? vspicgo.paste('/Users/zhangjiaping/Desktop/B-Tree.studio/', editor) : (() => {})();
 }
 
 /*
@@ -29,8 +25,7 @@ function getActiveMarkDownEditor(): vscode.TextEditor | undefined {
 export async function activate(context: vscode.ExtensionContext) {
   const vspicgo = new VSPicgo();
   const disposable = [
-    vscode.commands.registerCommand('picgo.uploadImageFromClipboard', () => uploadImageFromClipboard(vspicgo)),
-    vscode.commands.registerCommand('markdown-img-paste.paste', function() {
+    vscode.commands.registerCommand('paste-img-from-clipboard.paste', function() {
       pasteImageFromClipboard(vspicgo);
     }),
   ];

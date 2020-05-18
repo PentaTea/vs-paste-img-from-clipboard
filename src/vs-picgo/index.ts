@@ -35,7 +35,7 @@ export interface IUploadName {
 }
 
 export interface IOutputUrl {
-  uploadedName: string;
+  name: string;
   url: string;
   [key: string]: string;
 }
@@ -80,7 +80,7 @@ export default class VSPicgo extends EventEmitter {
       try {
         urlText = ctx.output.reduce((acc: string, imgInfo: ImgInfo): string => {
           return `${acc}${formatString(outputFormatTemplate, {
-            uploadedName: getUploadedName(imgInfo),
+            name: getUploadedName(imgInfo),
             url: imgInfo.imgUrl,
           })}\n`;
         }, '');
@@ -191,10 +191,10 @@ export default class VSPicgo extends EventEmitter {
     return VSPicgo.picgo.upload(input);
   }
 
-  async paste(): Promise<void | string | Error> {
+  async paste(target: string, editor: vscode.TextEditor): Promise<void | string | Error> {
     if (VSPicgo.picgo.configPath === '')
       return VSPicgo.picgo.log.error('The configuration file only supports JSON format.');
-    // upload from clipboard
+    // get img from clipboard
     try {
       const { imgPath, isExistFile } = await getClipboardImage(VSPicgo.picgo);
       if (imgPath === 'no image') {
@@ -211,7 +211,28 @@ export default class VSPicgo extends EventEmitter {
             await fs.unlinkSync(imgPath);
           }
         });
-        vscode.window.showInformationMessage(imgPath);
+
+        let urlText = '';
+        const outputFormatTemplate =
+          vscode.workspace.getConfiguration('pasteImageFromClipboard').get<string>('customOutputFormat') ||
+          '![${name}](${url})';
+        try {
+          let targetUrl = target + path.basename(imgPath);
+          fs.renameSync(imgPath, targetUrl);
+
+          urlText = `${formatString(outputFormatTemplate, {
+            name: path.basename(imgPath),
+            url: targetUrl,
+          })}\n`;
+          urlText = urlText.trim();
+          //输出
+          editor.edit(textEditor => {
+            textEditor.replace(editor.selection, urlText);
+            vscode.window.showInformationMessage('finished');
+          });
+        } catch (error) {
+          vscode.window.showErrorMessage(error);
+        }
       }
     } catch (e) {
       VSPicgo.picgo.log.error(e);
