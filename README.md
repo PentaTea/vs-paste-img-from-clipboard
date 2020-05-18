@@ -1,6 +1,6 @@
 # pasteImageFromClipboard
 
-> Since I be unable to write vscode extension and typescript and English, the code of this repository is based on [vs-picgo](https://github.com/PicGo/vs-picgo).
+> Since I have not learned to write vscode extension and typescript and English, the code of this repository is based on [vs-picgo](https://github.com/PicGo/vs-picgo).
 >
 > This extension will save the pictures from clipboard to local and paste the link to the editor
 
