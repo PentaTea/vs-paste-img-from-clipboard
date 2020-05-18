@@ -3,7 +3,7 @@
   "displayName": "%ext.displayName%",
   "description": "%ext.description%",
   "repository": "https://github.com/PentaTea/vs-paste-img-from-clipboard",
-  "issues": "https://github.com/PentaTea/vs-picgo/vs-paste-img-from-clipboard",
+  "issues": "https://github.com/PentaTea/vs-paste-img-from-clipboard/issues",
   "keywords": "%ext.keywords%",
   "version": "0.1.0",
   "publisher": "PentaTea",
